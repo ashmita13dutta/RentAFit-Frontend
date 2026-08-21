@@ -37,7 +37,7 @@ npm run build
 ```
 
 ## Environment
-Create a `.env` file in `/Users/mypc/RentAFit/web_app` or copy `.env.example`.
+Create a `.env` file in the project root, or copy `.env.example`.
 
 Recommended frontend-only setup:
 
