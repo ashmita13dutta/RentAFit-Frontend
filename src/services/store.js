@@ -1,6 +1,7 @@
 const USER_KEY = 'rentafit-user';
 const CART_KEY = 'rentafit-cart';
 const ACCOUNTS_KEY = 'rentafit-accounts';
+const TRYON_FEEDBACK_KEY = 'rentafit-tryon-feedback';
 
 const DEMO_ACCOUNTS = [
   {
@@ -209,4 +210,23 @@ export function clearCart() {
 
 export function getCartCount() {
   return getCartItems().length;
+}
+
+export function getTryOnFeedback() {
+  return readJson(TRYON_FEEDBACK_KEY, []);
+}
+
+export function saveTryOnFeedback({ productId, productName, ratings = {}, overallRating, comment = '' }) {
+  const entry = {
+    id: `${productId}-${Date.now()}`,
+    productId,
+    productName,
+    ratings,
+    overallRating: Number(overallRating) || 0,
+    comment: comment.trim(),
+    createdAt: new Date().toISOString(),
+  };
+  writeJson(TRYON_FEEDBACK_KEY, [entry, ...getTryOnFeedback()]);
+  emit('rentafit:tryon-feedback-updated');
+  return entry;
 }

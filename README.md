@@ -3,8 +3,8 @@
 React + Bootstrap frontend for the `Rent a Fit` renter and lender experience.
 
 ## Live Demo
-- GitHub repo: `anmol-228/RentAFit-Frontend`
-- GitHub Pages: `https://anmol-228.github.io/RentAFit-Frontend/`
+- Live site: https://ashmita13dutta.github.io/RentAFit-Frontend/
+- Original team repo: [`anmol-228/RentAFit-Frontend`](https://github.com/anmol-228/RentAFit-Frontend) (this is my fork, built as a two-person team project)
 
 The current app is intentionally **frontend-first**:
 - placeholder visuals instead of final product photos
@@ -32,7 +32,7 @@ npm run build
 ```
 
 ## Environment
-Create a `.env` file in `/Users/mypc/RentAFit/web_app` or copy `.env.example`.
+Copy `.env.example` to `.env` in the project root.
 
 Recommended frontend-only setup:
 

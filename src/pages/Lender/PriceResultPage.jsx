@@ -12,9 +12,9 @@ function decisionTone(decision) {
 }
 
 function decisionCopy(decision) {
-  if (decision === 'Approve') return 'Ready to move forward with a live listing.';
-  if (decision === 'Review') return 'Keep the listing visible to ops before it goes live.';
-  return 'Hold this upload until the moderation issues are resolved.';
+  if (decision === 'Approve') return 'Ready to publish.';
+  if (decision === 'Review') return 'Needs a quick review before it goes live.';
+  return 'Update the listing before publishing.';
 }
 
 function PriceResultPage() {
@@ -114,7 +114,7 @@ function PriceResultPage() {
       featured: false,
       shortDescription: itemDetails.description,
       description: itemDetails.description,
-      trustNotes: ['Submitted with front-view + close-up image set', 'Pending operational review', 'Frontend demo listing'],
+      trustNotes: ['Front view and detail shot added', 'Ready for review', 'Saved to your listings'],
       status: modelBDecision.prediction?.suggested_listing_status || 'PENDING_REVIEW',
       decisionLabel: modelBDecision.prediction?.predicted_decision || 'Review',
       createdAt: new Date().toISOString().slice(0, 10),
@@ -132,9 +132,9 @@ function PriceResultPage() {
         <section className="workspace-card result-stage mb-4">
           <div className="result-stage__copy">
             <p className="eyebrow mb-2">Listing result</p>
-            <h1 className="section-title mb-3">Your lender result now reads like a publish-ready product review.</h1>
+            <h1 className="section-title mb-3">Your listing is ready for review.</h1>
             <p className="text-muted mb-0">
-              Model A sets the pricing window, Model B gives the moderation route, and the front-view + close-up image set is already mapped into the saved listing preview.
+              Check the suggested range, review the photos, and choose a publish price.
             </p>
             <div className="result-stage__chips">
               <div className="result-chip">
@@ -142,12 +142,12 @@ function PriceResultPage() {
                 <strong>{formatCurrency(publishPrice || predictedMid)}</strong>
               </div>
               <div className="result-chip">
-                <span>Moderation route</span>
+                <span>Listing status</span>
                 <strong>{decision}</strong>
               </div>
               <div className="result-chip">
                 <span>Image set</span>
-                <strong>Front view + close-up</strong>
+                <strong>Front view + detail</strong>
               </div>
             </div>
           </div>
@@ -170,7 +170,7 @@ function PriceResultPage() {
               </div>
               <div className="result-stage__detail-copy">
                 <span>Saved preview roles</span>
-                <strong>Front view cover + close-up detail</strong>
+                <strong>Front view + detail shot</strong>
                 <p>{decisionCopy(decision)}</p>
               </div>
             </div>
@@ -183,7 +183,7 @@ function PriceResultPage() {
               <section className="workspace-card">
                 <div className="workspace-card__header">
                   <div>
-                    <p className="eyebrow mb-1">Model A</p>
+                    <p className="eyebrow mb-1">Price range</p>
                     <h2 className="h4 mb-0">Suggested rental range</h2>
                   </div>
                 </div>
@@ -198,8 +198,8 @@ function PriceResultPage() {
               <section className="workspace-card">
                 <div className="workspace-card__header">
                   <div>
-                    <p className="eyebrow mb-1">Model B</p>
-                    <h2 className="h4 mb-0">Moderation guidance</h2>
+                    <p className="eyebrow mb-1">Listing review</p>
+                    <h2 className="h4 mb-0">Status guidance</h2>
                   </div>
                 </div>
                 <div className="result-stat-grid">
@@ -211,7 +211,7 @@ function PriceResultPage() {
 
                 {modelBDecision.lifecycle?.frontend_popup_recommended ? (
                   <div className="alert alert-warning rounded-4 border-0 mb-0 mt-3">
-                    <strong>Conflict popup:</strong> {modelBDecision.lifecycle.frontend_popup_message}
+                    <strong>Attention:</strong> {modelBDecision.lifecycle.frontend_popup_message}
                   </div>
                 ) : null}
               </section>
@@ -269,7 +269,7 @@ function PriceResultPage() {
                 <h2 className="h4 mb-0">Choose your publish price</h2>
               </div>
             </div>
-            <p className="text-muted">Keep the chosen price inside the ML range so the listing remains aligned with the platform guidance.</p>
+            <p className="text-muted">Choose a price inside the suggested range.</p>
             <label className="form-label mt-2">Publish price</label>
             <input
               type="number"
@@ -287,12 +287,12 @@ function PriceResultPage() {
                 <strong>{formatCurrency(publishPrice || 0)}</strong>
               </div>
               <div className="result-publish-card__row">
-                <span>Moderation route</span>
+                <span>Listing status</span>
                 <strong>{decision}</strong>
               </div>
               <div className="result-publish-card__row">
                 <span>Image structure</span>
-                <strong>Front view + close-up</strong>
+                <strong>Front view + detail</strong>
               </div>
               <div className="result-publish-card__row">
                 <span>Saved renter preview</span>
@@ -301,7 +301,7 @@ function PriceResultPage() {
             </div>
 
             <div className="result-note mt-4">
-              <strong>Saved listing preview:</strong> The clean front view becomes the cover image renters see first, while the close-up remains as the second detail view on the product page.
+              <strong>Listing preview:</strong> The front view appears first in the catalog, while the detail shot appears next on the product page.
             </div>
 
             {priceInsideRange === false ? (

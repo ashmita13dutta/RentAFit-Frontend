@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AppNavbar from '../../components/AppNavbar';
-import ProductRail from '../../components/ProductRail';
-import ProductVisual from '../../components/ProductVisual';
+import EditorialProductTile from '../../components/EditorialProductTile';
+import FashionImageFrame from '../../components/FashionImageFrame';
+import PageContentShell from '../../components/PageContentShell';
+import Reveal from '../../components/Reveal';
 import SiteFooter from '../../components/SiteFooter';
 import TryOnModal from '../../components/TryOnModal';
 import { addToCart } from '../../services/store';
@@ -15,140 +17,176 @@ function ProductDetailPage() {
   const product = useMemo(() => getProductById(productId), [productId]);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(product?.availableSizes?.[0] || product?.size || '');
 
   const recommendedProducts = useMemo(() => {
     if (!product) return [];
     return getRecommendedProducts({
       seedProduct: product,
-      limit: 6,
+      limit: 4,
       excludeId: product.id,
     });
   }, [product]);
 
   if (!product) {
     return (
-      <div className="page-shell">
+      <div className="page-shell page-shell--pdp-canvas">
         <AppNavbar />
-        <main className="container product-detail-shell py-5">
-          <div className="empty-view">
-            <h2 className="mb-2">Product not found.</h2>
-            <button type="button" className="btn btn-primary rounded-pill" onClick={() => navigate('/products')}>
-              Back to catalog
-            </button>
-          </div>
+        <main className="pdp-canvas-page">
+          <PageContentShell>
+            <div className="empty-view">
+              <h2 className="mb-2">Product not found.</h2>
+              <button type="button" className="btn btn-primary" onClick={() => navigate('/products')}>
+                Back to catalog
+              </button>
+            </div>
+          </PageContentShell>
         </main>
       </div>
     );
   }
 
+  const activeToken = product.imageTokens?.[selectedImage] || product.imageTokens?.[0] || null;
+
   const handleAddToCart = () => {
-    addToCart(product, { size: product.size, durationKey: '4-days', quantity });
+    addToCart(product, {
+      size: selectedSize || product.size,
+      durationKey: '4-days',
+      quantity,
+    });
   };
 
   const incrementQuantity = () => setQuantity((current) => current + 1);
   const decrementQuantity = () => setQuantity((current) => Math.max(1, current - 1));
 
   return (
-    <div className="page-shell">
+    <div className="page-shell page-shell--pdp-canvas">
       <AppNavbar />
-      <main className="container product-detail-shell py-5">
-        <div className="row g-5 align-items-start product-detail__layout">
-          <div className="col-lg-6">
-            <ProductVisual token={product.imageTokens[selectedImage]} height={560} fit="contain" className="product-visual--detail" />
-            {product.imageTokens.length > 1 && (
-              <div className="thumbnail-row mt-3">
-                {product.imageTokens.map((token, index) => (
-                  <button
-                    type="button"
-                    key={token.id}
-                    className={`thumbnail-chip ${selectedImage === index ? 'is-active' : ''}`}
-                    onClick={() => setSelectedImage(index)}
-                    aria-label={`View ${product.name} image ${index + 1}`}
-                  >
-                    <img src={token.imageUrl} alt={token.alt} className="thumbnail-chip__image" loading="lazy" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="col-lg-6">
-            <p className="eyebrow mb-2">{product.brand} · {product.category}</p>
-            <h1 className="detail-title">{product.name}</h1>
-            <p className="detail-description">{product.description}</p>
 
-            <div className="detail-price-row">
-              <div>
-                <div className="detail-price">{formatCurrency(product.price)}</div>
-                <div className="text-muted">Original retail {formatCurrency(product.originalPrice)}</div>
-              </div>
-              <div className="badge-soft">{product.badge}</div>
-            </div>
+      <main className="pdp-canvas-page">
+        <PageContentShell as="section" className="pdp-canvas">
+          <div className="pdp-canvas__layout">
+            <Reveal className="pdp-canvas__gallery" offset={18}>
+              <div className="pdp-canvas__gallery-inner">
+                <div className="pdp-canvas__primary">
+                  <FashionImageFrame token={activeToken} fit="contain" priority className="pdp-canvas__primary-frame" />
+                </div>
 
-            <div className="detail-meta-grid mt-4">
-              <div>
-                <span>Gender</span>
-                <strong>{product.gender}</strong>
+                {product.imageTokens?.length > 1 && (
+                  <div className="pdp-canvas__thumbs">
+                    {product.imageTokens.map((token, index) => (
+                      <button
+                        type="button"
+                        key={token.id}
+                        className={`pdp-canvas__thumb ${selectedImage === index ? 'is-active' : ''}`}
+                        onClick={() => setSelectedImage(index)}
+                        aria-label={`View ${product.name} image ${index + 1}`}
+                      >
+                        <FashionImageFrame token={token} fit="contain" className="pdp-canvas__thumb-frame" />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div>
-                <span>Material</span>
-                <strong>{product.material}</strong>
-              </div>
-              <div>
-                <span>Condition</span>
-                <strong>{product.condition}</strong>
-              </div>
-              <div>
-                <span>Style</span>
-                <strong>{product.styleTag}</strong>
-              </div>
-            </div>
+            </Reveal>
 
-            <div className="mt-4">
-              <span className="form-label fw-semibold d-block">Rental size</span>
-              <div className="size-pill is-active size-pill--static">{product.size}</div>
-            </div>
+            <Reveal className="pdp-canvas__panel" offset={24} delay={60}>
+              <div className="pdp-canvas__intro">
+                <p className="eyebrow mb-2">{product.brand} · {product.category}</p>
+                <h1 className="pdp-canvas__title">{product.name}</h1>
+                <p className="pdp-canvas__copy mb-0">{product.description}</p>
+              </div>
 
-            <div className="detail-actions mt-4">
-              <div>
-                <span className="form-label fw-semibold d-block">Quantity</span>
-                <div className="quantity-stepper quantity-stepper--detail" aria-label={`Quantity for ${product.name}`}>
-                  <button type="button" className="quantity-stepper__button" onClick={decrementQuantity} aria-label={`Decrease quantity for ${product.name}`}>
-                    −
-                  </button>
-                  <span className="quantity-stepper__value">{quantity}</span>
-                  <button type="button" className="quantity-stepper__button" onClick={incrementQuantity} aria-label={`Increase quantity for ${product.name}`}>
-                    +
+              <div className="pdp-canvas__price-row">
+                <div>
+                  <div className="pdp-canvas__price">{formatCurrency(product.price)}</div>
+                  <div className="pdp-canvas__price-note">Original retail {formatCurrency(product.originalPrice)}</div>
+                </div>
+                {product.badge && <span className="badge-soft">{product.badge}</span>}
+              </div>
+
+              <div className="pdp-canvas__meta-grid">
+                <div className="pdp-canvas__meta-card"><span>Gender</span><strong>{product.gender}</strong></div>
+                <div className="pdp-canvas__meta-card"><span>Material</span><strong>{product.material}</strong></div>
+                <div className="pdp-canvas__meta-card"><span>Condition</span><strong>{product.condition}</strong></div>
+                <div className="pdp-canvas__meta-card"><span>Style</span><strong>{product.styleTag}</strong></div>
+              </div>
+
+              <div className="pdp-canvas__controls">
+                <div className="pdp-canvas__control-block">
+                  <span className="pdp-canvas__label">Rental size</span>
+                  <div className="pdp-canvas__size-actions-row">
+                    <div className="pdp-canvas__size-row">
+                      {product.availableSizes.map((size) => (
+                        <button
+                          key={size}
+                          type="button"
+                          className={`size-pill ${selectedSize === size ? 'is-active' : ''}`}
+                          onClick={() => setSelectedSize(size)}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="quantity-stepper quantity-stepper--detail" aria-label={`Rental duration for ${product.name}`}>
+                      <button type="button" className="quantity-stepper__button" onClick={decrementQuantity} aria-label={`Decrease rental days for ${product.name}`}>
+                        −
+                      </button>
+                      <span className="quantity-stepper__value">{quantity} Day{quantity === 1 ? '' : 's'}</span>
+                      <button type="button" className="quantity-stepper__button" onClick={incrementQuantity} aria-label={`Increase rental days for ${product.name}`}>
+                        +
+                      </button>
+                    </div>
+
+                    <TryOnModal product={product} triggerClassName="pdp-canvas__action pdp-canvas__action--ghost pdp-canvas__action--end" />
+                  </div>
+
+                  <button type="button" className="btn pdp-canvas__action pdp-canvas__action--primary pdp-canvas__action--full" onClick={handleAddToCart}>
+                    Add to cart
                   </button>
                 </div>
               </div>
-              <div className="detail-actions__buttons">
-                <button type="button" className="btn detail-action detail-action--primary" onClick={handleAddToCart}>
-                  Add to Cart
-                </button>
-                <TryOnModal product={product} triggerClassName="detail-action detail-action--dark" />
+
+              <div className="pdp-canvas__trust">
+                <h3 className="pdp-canvas__trust-title">Rental details</h3>
+                <ul className="pdp-canvas__trust-list mb-0">
+                  {product.trustNotes.map((note) => (
+                    <li key={note}>{note}</li>
+                  ))}
+                </ul>
               </div>
-            </div>
-
-            <div className="trust-block mt-4">
-              <h3 className="h5 mb-3">Trust notes</h3>
-              <ul className="rules-list mb-0">
-                {product.trustNotes.map((note) => (
-                  <li key={note}>{note}</li>
-                ))}
-              </ul>
-            </div>
+            </Reveal>
           </div>
-        </div>
+        </PageContentShell>
 
-        <div className="mt-5">
-          <ProductRail
-            eyebrow="Recommended edit"
-            title="More pieces in the same mood"
-            subtitle="A tighter recommendation rail based on category, material, and styling fit."
-            products={recommendedProducts}
-          />
-        </div>
+        <PageContentShell as="section" className="pdp-canvas__related-shell">
+          <div className="pdp-canvas__related-head">
+            <div>
+              <p className="eyebrow mb-2">Recommended edit</p>
+              <h2 className="pdp-canvas__related-title mb-0">More pieces in the same mood</h2>
+            </div>
+            <p className="pdp-canvas__related-copy mb-0">A few more pieces that work with the same look and feel.</p>
+          </div>
+
+          <div className="pdp-canvas__related-grid">
+            {recommendedProducts.map((item) => (
+              <EditorialProductTile key={item.id} product={item} compact className="pdp-canvas__related-tile" />
+            ))}
+          </div>
+        </PageContentShell>
       </main>
+
+      <div className="pdp-canvas__mobile-bar d-lg-none">
+        <div>
+          <span className="pdp-canvas__mobile-label">From</span>
+          <strong>{formatCurrency(product.price)}</strong>
+        </div>
+        <button type="button" className="btn pdp-canvas__mobile-action" onClick={handleAddToCart}>
+          Add to cart
+        </button>
+      </div>
+
       <SiteFooter />
     </div>
   );

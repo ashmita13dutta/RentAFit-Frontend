@@ -26,7 +26,7 @@ function buildImageToken(product, imageUrl, index = 0) {
   return {
     id: `${product.id}-img-${index + 1}`,
     label: `${product.brand} ${product.category}`,
-    imageUrl: resolveAssetPath(imageUrl),
+    imageUrl,
     alt: `${product.name} image ${index + 1}`,
     palette: product.colorTheme || ['#7B1E2B', '#F5E9DC'],
   };
@@ -175,11 +175,11 @@ export function getProductsByFilters({ gender = 'All', category = 'All', search 
 export const MOCK_FAQ = [
   {
     question: 'What rental duration options are available right now?',
-    answer: 'The current frontend experience supports a minimum rental period of 3 days. Many product actions start with a 4-day quick add, and you can increase the duration from the cart to fit a longer rental window.',
+    answer: 'Rentals start at 3 days. You can increase the rental period from the bag before placing your request.',
   },
   {
     question: 'How is the rental total calculated?',
-    answer: 'Each order starts with the product rent price, then adds a base duration charge of Rs. 300 for the first 3 days. Every extra day after that adds Rs. 100 more, so the cart total updates as you adjust duration.',
+    answer: 'Each order includes the listed rental price plus a base duration charge of Rs. 300 for the first 3 days. Every extra day adds Rs. 100, and the total updates as you adjust the rental period.',
   },
   {
     question: 'Can I change rental duration after adding an item to cart?',
@@ -187,7 +187,7 @@ export const MOCK_FAQ = [
   },
   {
     question: 'Do I need an account to browse the catalog?',
-    answer: 'No. You can browse products, open search, explore trending and recently uploaded items, and add items to cart without logging in. Login or signup is mainly needed for account-specific areas like orders and lender tools.',
+    answer: 'No. You can browse the catalog, use search, and add pieces to your bag without logging in. An account is only needed for orders and lender tools.',
   },
   {
     question: 'Where can I track my current and past rentals?',
@@ -195,19 +195,19 @@ export const MOCK_FAQ = [
   },
   {
     question: 'How do search, trending, and recommendations work?',
-    answer: 'The search modal helps you find products by name, brand, category, and catalog keywords. The homepage surfaces trending and recently uploaded items, while product detail and cart pages show recommendation rails based on related catalog items.',
+    answer: 'Search helps you find pieces by name, brand, or category. The homepage highlights popular and newly added styles, while product and bag pages suggest related pieces.',
   },
   {
     question: 'Can I become a lender and upload my own clothing?',
-    answer: 'Yes. You can sign up as a lender or switch from renter to lender from the lender access flow. Once lender access is active, you can upload product details, review the suggested pricing result, and save the listing to your dashboard.',
+    answer: 'Yes. You can sign up as a lender or unlock lender access later, then upload a piece, review the suggested range, and save it to your dashboard.',
   },
   {
     question: 'What happens after I submit a lender listing?',
-    answer: 'Submitted listings are saved into the lender dashboard in this frontend demo, where you can review their status and demand signals. Depending on the item state, listings may appear as Active, Pending Review, Reapproval Required, Rejected, or Removed.',
+    answer: 'Your listing appears in the lender dashboard, where you can check its status and follow any incoming requests.',
   },
   {
     question: 'How do I know an outfit is safe to rent?',
-    answer: 'The platform experience highlights sanitized handling, transparent return support, reviewed pricing, and moderation checks. Trust notes are also shown on product detail pages to give extra context before you rent.',
+    answer: 'Each listing includes clear condition details, prepared-for-rental notes, and return information so you can book with confidence.',
   },
   {
     question: 'Is virtual try-on available now?',
@@ -215,11 +215,11 @@ export const MOCK_FAQ = [
   },
   {
     question: 'What happens if an item is returned late or comes back damaged?',
-    answer: 'The current rental rules note that additional charges may apply for late returns or item damage. The detailed fee handling is not fully automated in this frontend demo yet, but the policy is already surfaced in the shopping experience.',
+    answer: 'Additional charges may apply for late returns or damage. Return details are shown clearly during the shopping journey.',
   },
   {
     question: 'Will my cart and account data stay saved on this device?',
-    answer: 'For the current frontend version, cart items, account state, and lender demo data are stored in the browser on the same device. That makes the demo feel persistent locally, but it is not yet a full multi-device synced experience.',
+    answer: 'Your bag and account stay saved in the browser on the same device, so you can return to them later.',
   },
 ];
 
@@ -235,7 +235,7 @@ const MOCK_USER_ORDERS = [
     total: 2664,
     timeline: [
       { label: 'Placed', note: 'Order created successfully.', complete: true },
-      { label: 'Confirmed', note: 'Rental request accepted by the platform.', complete: true },
+      { label: 'Confirmed', note: 'Rental request confirmed.', complete: true },
       { label: 'Out for delivery', note: 'Delivery partner is on the way.', complete: true },
       { label: 'Active rental', note: 'Starts once the outfit is delivered.', complete: false },
     ],
@@ -251,7 +251,7 @@ const MOCK_USER_ORDERS = [
     total: 5194,
     timeline: [
       { label: 'Placed', note: 'Order created successfully.', complete: true },
-      { label: 'Confirmed', note: 'Rental request accepted by the platform.', complete: true },
+      { label: 'Confirmed', note: 'Rental request confirmed.', complete: true },
       { label: 'Delivered', note: 'Outfit delivered to renter address.', complete: true },
       { label: 'Active rental', note: 'Rental is currently live.', complete: true },
     ],

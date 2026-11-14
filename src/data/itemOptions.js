@@ -66,7 +66,7 @@ export const RENTAL_DURATION_OPTIONS = [
 ];
 
 export const TRUST_ITEMS = [
-  'Sanitized after every rental',
-  'Transparent return support',
-  'Reviewed pricing and moderation checks',
+  'Prepared for every rental',
+  'Easy returns and pickup',
+  'Quality checked before dispatch',
 ];

@@ -1,3 +1,4 @@
+import { useEffect, useLayoutEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import SignupPage from './pages/Auth/SignupPage';
@@ -10,7 +11,10 @@ import ProductDetailPage from './pages/Renter/ProductDetailPage';
 import CartPage from './pages/Renter/CartPage';
 import OrdersPage from './pages/Renter/OrdersPage';
 import FaqPage from './pages/Info/FaqPage';
+import AboutPage from './pages/Info/AboutPage';
 import { getCurrentUser } from './services/store';
+
+const THEME_STORAGE_KEY = 'rentafit-theme';
 
 function LenderEntryRoute() {
   const user = getCurrentUser();
@@ -20,30 +24,72 @@ function LenderEntryRoute() {
   return <Navigate to="/lender/dashboard" replace />;
 }
 
+function RouteScrollReset({ locationKey, pathname, search }) {
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.history) return undefined;
+    const previous = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+    return () => {
+      window.history.scrollRestoration = previous;
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const resetScroll = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      document.body.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    };
+
+    resetScroll();
+    const rafId = window.requestAnimationFrame(resetScroll);
+    const timeoutId = window.setTimeout(resetScroll, 60);
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      window.clearTimeout(timeoutId);
+    };
+  }, [locationKey, pathname, search]);
+
+  return null;
+}
+
 function App() {
   const location = useLocation();
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    document.documentElement.dataset.theme = 'light';
+    window.sessionStorage.removeItem(THEME_STORAGE_KEY);
+  }, []);
+
   return (
-    <div className="route-shell">
-      <div key={`${location.pathname}${location.search}`} className="route-stage">
-        <Routes location={location}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/products" element={<ProductDisplayPage />} />
-          <Route path="/products/:productId" element={<ProductDetailPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/faq" element={<FaqPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/lender" element={<LenderEntryRoute />} />
-          <Route path="/lender/dashboard" element={<LenderDashboardPage />} />
-          <Route path="/lender/upload" element={<UploadItemPage />} />
-          <Route path="/lender/price" element={<PriceResultPage />} />
-          <Route path="/renter/recommendations" element={<Navigate to="/products" replace />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+    <>
+      <RouteScrollReset locationKey={location.key} pathname={location.pathname} search={location.search} />
+      <div className="route-shell">
+        <div key={`${location.pathname}${location.search}`} className="route-stage">
+          <Routes location={location}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/products" element={<ProductDisplayPage />} />
+            <Route path="/products/:productId" element={<ProductDetailPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/faq" element={<FaqPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/lender" element={<LenderEntryRoute />} />
+            <Route path="/lender/dashboard" element={<LenderDashboardPage />} />
+            <Route path="/lender/upload" element={<UploadItemPage />} />
+            <Route path="/lender/price" element={<PriceResultPage />} />
+            <Route path="/renter/recommendations" element={<Navigate to="/products" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

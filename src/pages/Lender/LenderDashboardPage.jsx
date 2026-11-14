@@ -86,7 +86,7 @@ function LenderDashboardPage() {
               <div>
                 <p className="eyebrow mb-2">Lender access</p>
                 <h1 className="section-title mb-2">Open the lender workspace</h1>
-                <p className="text-muted mb-0">Confirm your details before unlocking listing uploads, pricing guidance, and moderation tracking.</p>
+                <p className="text-muted mb-0">Confirm a few details to start listing pieces.</p>
               </div>
             </div>
 
@@ -128,14 +128,14 @@ function LenderDashboardPage() {
       <AppNavbar />
       <main className="container-xxl workspace-shell py-5 px-3 px-lg-4">
         {location.state?.listed ? (
-          <div className="alert alert-success rounded-4 border-0 shadow-sm">Listing saved to your dashboard with a front-view cover image and close-up detail image.</div>
+          <div className="alert alert-success rounded-4 border-0 shadow-sm">Listing added to your dashboard.</div>
         ) : null}
 
         <section className="workspace-header workspace-header--lender">
           <div>
             <p className="eyebrow mb-2">Lender workspace</p>
             <h1 className="section-title mb-2">Welcome back, {user.name || 'Lender'}.</h1>
-            <p className="text-muted mb-0">Monitor uploads, moderation state, and incoming demand from one cleaner workspace. Every new listing now starts with one clean front view and one close-up detail shot.</p>
+            <p className="text-muted mb-0">Track your listings, follow requests, and add new pieces from one place.</p>
           </div>
           <div className="workspace-header__actions">
             <button type="button" className="btn btn-outline-primary rounded-pill px-4" onClick={() => navigate('/products')}>
@@ -160,24 +160,24 @@ function LenderDashboardPage() {
           <div className="workspace-card__header workspace-card__header--stacked">
             <div>
               <p className="eyebrow mb-1">Upload standard</p>
-              <h2 className="h4 mb-0">Two images, with clear roles across the product journey.</h2>
+              <h2 className="h4 mb-0">Two images, one clear listing.</h2>
             </div>
           </div>
           <div className="lender-guidance-card__grid">
             <div className="lender-guidance-card__item">
               <span>01</span>
-              <strong>Clean front view</strong>
-              <p>Becomes the cover image renters first see in catalog and search.</p>
+              <strong>Front view</strong>
+              <p>Used as the main listing image.</p>
             </div>
             <div className="lender-guidance-card__item">
               <span>02</span>
-              <strong>Close-up detail</strong>
-              <p>Supports the product page with texture, finish, and garment detail.</p>
+              <strong>Detail shot</strong>
+              <p>Shows fabric, finish, and important details.</p>
             </div>
             <div className="lender-guidance-card__item">
               <span>03</span>
-              <strong>Same review path</strong>
-              <p>Both images stay attached to pricing, moderation, and saved listing previews.</p>
+              <strong>Saved together</strong>
+              <p>Both images stay with the listing across the site.</p>
             </div>
           </div>
         </section>
@@ -194,7 +194,7 @@ function LenderDashboardPage() {
             {recentUploads.length === 0 ? (
               <div className="empty-view py-4">
                 <h3 className="mb-2">No uploads yet.</h3>
-                <p className="text-muted mb-0">Your latest uploads will start showing here after the first submission with one front view and one close-up detail shot.</p>
+                <p className="text-muted mb-0">Your latest uploads will appear here after your first listing.</p>
               </div>
             ) : (
               <div className="workspace-list">
@@ -211,7 +211,7 @@ function LenderDashboardPage() {
                       <div>
                         <div className="fw-semibold">{listing.name}</div>
                         <div className="text-muted small">{listing.brand} • {listing.category}</div>
-                        <div className="text-muted small">Front view cover + close-up detail saved</div>
+                        <div className="text-muted small">Front view and detail shot added</div>
                       </div>
                     </div>
                     <div className="text-end">
@@ -261,14 +261,14 @@ function LenderDashboardPage() {
             <div>
               <p className="eyebrow mb-1">Your uploaded items</p>
               <h2 className="h4 mb-0">Listing queue</h2>
-              <p className="text-muted mb-0">Each card shows the same front-view cover and close-up detail structure renters will see later in the product experience.</p>
+              <p className="text-muted mb-0">See how each listing will appear in the wardrobe.</p>
             </div>
           </div>
 
           {listings.length === 0 ? (
             <div className="empty-view">
               <h3 className="mb-2">No uploaded items yet.</h3>
-              <p className="text-muted mb-3">Start with one product upload using a clean front view and one close-up detail shot to preview the full lender journey.</p>
+              <p className="text-muted mb-3">Start with your first upload to see the full listing view here.</p>
               <button type="button" className="btn btn-primary rounded-pill px-4" onClick={() => navigate('/lender/upload')}>
                 Upload first item
               </button>
@@ -312,8 +312,8 @@ function LenderDashboardPage() {
 
                     <div className="lender-listing-card__footer">
                       <div>
-                        <div className="fw-semibold">Primary front view · secondary close-up</div>
-                        <div className="text-muted small">Saved renter-facing preview structure is already attached to this listing.</div>
+                        <div className="fw-semibold">Front view · detail shot</div>
+                        <div className="text-muted small">Saved and ready for the listing page.</div>
                       </div>
                     </div>
                   </div>

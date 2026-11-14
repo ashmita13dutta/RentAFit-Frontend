@@ -1,22 +1,44 @@
-import { useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import AppNavbar from '../../components/AppNavbar';
-import ProductCard from '../../components/ProductCard';
-import SiteFooter from '../../components/SiteFooter';
+import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import AppNavbar from "../../components/AppNavbar";
+import PageContentShell from "../../components/PageContentShell";
+import ProductCard from "../../components/ProductCard";
+import SiteFooter from "../../components/SiteFooter";
 import {
   CATEGORY_OPTIONS,
   CATALOG_GENDER_FILTER_OPTIONS,
   PRICE_FILTER_OPTIONS,
   SORT_OPTIONS,
-} from '../../data/itemOptions';
-import { getProductsByFilters } from '../../services/mockData';
+} from "../../data/itemOptions";
+import { getProductsByFilters } from "../../services/mockData";
 
 function FilterIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M4 7h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M7 12h10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M10 17h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4 7h16"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M7 12h10"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M10 17h4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -26,21 +48,27 @@ function ProductDisplayPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const filters = {
-    gender: searchParams.get('gender') || 'All',
-    category: searchParams.get('category') || 'All',
-    search: searchParams.get('search') || '',
-    priceBand: searchParams.get('price') || 'All',
-    sort: searchParams.get('sort') || 'featured',
+    gender: searchParams.get("gender") || "All",
+    category: searchParams.get("category") || "All",
+    search: searchParams.get("search") || "",
+    priceBand: searchParams.get("price") || "All",
+    sort: searchParams.get("sort") || "featured",
   };
 
   const products = useMemo(
     () => getProductsByFilters(filters),
-    [filters.gender, filters.category, filters.search, filters.priceBand, filters.sort],
+    [
+      filters.gender,
+      filters.category,
+      filters.search,
+      filters.priceBand,
+      filters.sort,
+    ],
   );
 
   const updateFilter = (key, value) => {
     const next = new URLSearchParams(searchParams);
-    if (!value || value === 'All') next.delete(key);
+    if (!value || value === "All") next.delete(key);
     else next.set(key, value);
     setSearchParams(next);
   };
@@ -50,115 +78,204 @@ function ProductDisplayPage() {
     setMobileFiltersOpen(false);
   };
 
+  const contextText = filters.search
+    ? `Search: "${filters.search}"`
+    : "Browse by gender, category, and price to find the right piece faster.";
+
   return (
-    <div className="page-shell">
+    <div className="page-shell page-shell--rent-atelier">
       <AppNavbar />
-      <main className="catalog-shell py-5">
-        <section className="listing-header catalog-header mb-4">
-          <p className="eyebrow mb-2 d-none d-xl-block">Products</p>
-          <div className="d-flex flex-column flex-xl-row justify-content-between align-items-xl-end gap-3">
-            <div>
-              <h1 className="section-title mb-1">Browse the current rental edit</h1>
-              <p className="text-muted mb-0 catalog-header__copy">Filter by gender, category, and price to move through the catalog with less friction.</p>
-            </div>
-            <div className="result-pill d-none d-xl-inline-flex">{products.length} items found</div>
-          </div>
-        </section>
+      <main className="rent-atelier-page">
+        <PageContentShell as="section" className="rent-atelier">
+          {mobileFiltersOpen && (
+            <button
+              type="button"
+              className="rent-atelier__backdrop"
+              aria-label="Close filters"
+              onClick={() => setMobileFiltersOpen(false)}
+            />
+          )}
 
-        <div className="catalog-mobile-toolbar d-xl-none mb-3">
-          <p className="eyebrow mb-0">Products</p>
-          <div className="result-pill mb-0 ms-auto">{products.length} items</div>
-          <button
-            type="button"
-            className="catalog-filter-toggle ms-2"
-            aria-label="Open filters"
-            onClick={() => setMobileFiltersOpen((prev) => !prev)}
-          >
-            <FilterIcon />
-          </button>
-        </div>
-
-        <div className="catalog-layout">
-          <aside className={`filter-panel catalog-filter-panel ${mobileFiltersOpen ? 'is-open' : ''}`}>
-            <div className="catalog-filter-panel__header mb-3">
-              <h2 className="mb-0 eyebrow">Filters</h2>
-              <div className="d-flex align-items-center gap-3">
-                <button type="button" className="btn btn-outline-primary rounded-pill px-3 py-1" onClick={clearFilters}>
-                  Clear
-                </button>
-                <button
-                  type="button"
-                  className="filter-close-btn d-xl-none"
-                  onClick={() => setMobileFiltersOpen(false)}
-                  aria-label="Close filters"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div className="d-grid gap-3">
-              <div>
-                <label className="form-label">Gender</label>
-                <select className="form-select" value={filters.gender === 'Unisex' ? 'All' : filters.gender} onChange={(event) => updateFilter('gender', event.target.value)}>
-                  <option value="All">All</option>
-                  {CATALOG_GENDER_FILTER_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="form-label">Category</label>
-                <select className="form-select" value={filters.category} onChange={(event) => updateFilter('category', event.target.value)}>
-                  <option value="All">All</option>
-                  {CATEGORY_OPTIONS.map((option) => (
-                    <option key={option} value={option}>{option}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="form-label">Price range</label>
-                <select className="form-select" value={filters.priceBand} onChange={(event) => updateFilter('price', event.target.value)}>
-                  {PRICE_FILTER_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="form-label">Sort</label>
-                <select className="form-select" value={filters.sort} onChange={(event) => updateFilter('sort', event.target.value)}>
-                  {SORT_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </aside>
-
-          <section className="catalog-results">
-            <div className="row g-4">
-              {products.map((product) => (
-                <div className="col-sm-6 col-lg-6 col-xl-4" key={product.id}>
-                  <ProductCard product={product} />
+          <div className="rent-atelier__layout">
+            <aside
+              className={`rent-atelier__filters ${mobileFiltersOpen ? "is-open" : ""}`}
+            >
+              <div className="rent-atelier__filters-head">
+                <div>
+                  <p className="eyebrow mb-1">Filters</p>
+                  <h2 className="rent-atelier__filters-title mb-0">
+                    Refine the edit
+                  </h2>
                 </div>
-              ))}
-            </div>
-
-            {products.length === 0 && (
-              <div className="empty-view mt-4">
-                <h3 className="mb-2">No products match these filters.</h3>
-                <p className="text-muted mb-0">Clear the filters to return to the full catalog.</p>
+                <div className="rent-atelier__filters-actions">
+                  <button
+                    type="button"
+                    className="rent-atelier__clear"
+                    onClick={clearFilters}
+                  >
+                    Clear
+                  </button>
+                  <button
+                    type="button"
+                    className="rent-atelier__close"
+                    aria-label="Close filters"
+                    onClick={() => setMobileFiltersOpen(false)}
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M6 6L18 18M18 6L6 18"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
-            )}
-          </section>
-        </div>
+
+              <div className="rent-atelier__filter-stack">
+                <label className="rent-atelier__field">
+                  <span>Gender</span>
+                  <select
+                    className="form-select"
+                    value={filters.gender === "Unisex" ? "All" : filters.gender}
+                    onChange={(event) =>
+                      updateFilter("gender", event.target.value)
+                    }
+                  >
+                    <option value="All">All</option>
+                    {CATALOG_GENDER_FILTER_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="rent-atelier__field">
+                  <span>Category</span>
+                  <select
+                    className="form-select"
+                    value={filters.category}
+                    onChange={(event) =>
+                      updateFilter("category", event.target.value)
+                    }
+                  >
+                    <option value="All">All</option>
+                    {CATEGORY_OPTIONS.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="rent-atelier__field">
+                  <span>Price range</span>
+                  <select
+                    className="form-select"
+                    value={filters.priceBand}
+                    onChange={(event) =>
+                      updateFilter("price", event.target.value)
+                    }
+                  >
+                    {PRICE_FILTER_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="rent-atelier__field">
+                  <span>Sort</span>
+                  <select
+                    className="form-select"
+                    value={filters.sort}
+                    onChange={(event) =>
+                      updateFilter("sort", event.target.value)
+                    }
+                  >
+                    {SORT_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <div className="rent-atelier__filter-summary">
+                <span>{products.length} items found</span>
+              </div>
+            </aside>
+
+            <section className="rent-atelier__content">
+              <header className="rent-atelier__header">
+                <div className="rent-atelier__header-copy">
+                  <p className="eyebrow mb-2 d-none d-lg-block">Products</p>
+                  <h1 className="rent-atelier__title">
+                    Browse the current rental edit
+                  </h1>
+                  <p className="rent-atelier__copy mb-0">{contextText}</p>
+                </div>
+              </header>
+
+              <div className="rent-atelier__toolbar d-lg-none">
+                <p className="eyebrow mb-0">Products</p>
+                <div className="rent-atelier__toolbar-actions">
+                  <span className="rent-atelier__count">
+                    {products.length} items
+                  </span>
+                  <button
+                    type="button"
+                    className="rent-atelier__toggle"
+                    aria-label="Open filters"
+                    onClick={() => setMobileFiltersOpen(true)}
+                  >
+                    <FilterIcon />
+                  </button>
+                </div>
+              </div>
+
+              {products.length > 0 ? (
+                <div className="rent-atelier__grid">
+                  {products.map((product, index) => {
+                    const isFeature = index % 6 === 0 || index % 6 === 5;
+                    return (
+                      <div
+                        key={product.id}
+                        className={`rent-atelier__grid-item ${isFeature ? "rent-atelier__grid-item--feature" : ""}`}
+                      >
+                        <ProductCard
+                          product={product}
+                          compact={!isFeature}
+                          featured={isFeature}
+                          visualFit="contain"
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="empty-view mt-2">
+                  <h3 className="mb-2">No products match these filters.</h3>
+                  <p className="text-muted mb-0">
+                    Clear the filters to return to the full catalog.
+                  </p>
+                </div>
+              )}
+            </section>
+          </div>
+        </PageContentShell>
       </main>
-      <SiteFooter />
+      ̇ <SiteFooter />
     </div>
   );
 }

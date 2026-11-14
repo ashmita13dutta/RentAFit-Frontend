@@ -1,15 +1,29 @@
+import { useEffect, useState } from 'react';
+
 function ProductVisual({ token, height = 280, small = false, fit = 'cover', className = '' }) {
   const imageUrl = token?.imageUrl;
   const alt = token?.alt || token?.label || 'Product image';
   const resolvedHeight = typeof height === 'number' ? `${height}px` : height;
+  const [hasImageError, setHasImageError] = useState(false);
 
-  if (imageUrl) {
+  useEffect(() => {
+    setHasImageError(false);
+  }, [imageUrl]);
+
+  if (imageUrl && !hasImageError) {
     return (
       <div
         className={`product-visual product-visual--image ${fit === 'contain' ? 'product-visual--contain' : ''} ${small ? 'product-visual-sm' : ''} ${className}`.trim()}
         style={{ minHeight: resolvedHeight, height: resolvedHeight }}
       >
-        <img className="product-visual__image" src={imageUrl} alt={alt} loading="lazy" style={{ objectFit: fit }} />
+        <img
+          className="product-visual__image"
+          src={imageUrl}
+          alt={alt}
+          loading="lazy"
+          style={{ objectFit: fit }}
+          onError={() => setHasImageError(true)}
+        />
       </div>
     );
   }

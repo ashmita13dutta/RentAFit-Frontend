@@ -4,9 +4,9 @@ import { hasLenderAccess, loginUser } from '../../services/store';
 import { resolveAssetPath } from '../../utils/assetPaths';
 
 const highlights = [
-  'Move between renter orders and lender tools from one account.',
-  'Keep your cart, orders, and listing workspace inside the same product.',
-  'Use the demo accounts below if you want to jump straight into the flows.',
+  'Keep your bag, orders, and saved pieces in one place.',
+  'Switch into lender tools when you want to list your own wardrobe.',
+  'Pick up where you left off with one account.',
 ];
 
 function LoginPage() {
@@ -26,7 +26,7 @@ function LoginPage() {
     const user = loginUser(formData);
 
     if (!user) {
-      setError('Account not found. Use signup first or try the demo credentials shown below.');
+      setError('Account not found. Create an account to continue.');
       return;
     }
 
@@ -38,14 +38,18 @@ function LoginPage() {
     <main className="auth-page min-vh-100">
       <div className="container-xxl py-4 py-lg-5 px-3 px-lg-4">
         <div className="auth-stage">
-          <section className="auth-stage__visual">
-            <img src={resolveAssetPath('/hero_banners/men_banner.jpg')} alt="Menswear rental editorial" className="auth-stage__image" />
+          <section className="auth-stage__visual auth-stage__visual--shared">
+            <img src={resolveAssetPath('/hero_banners/unisex_banner.jpg')} alt="Shared wardrobe editorial" className="auth-stage__image" />
+            <div className="auth-stage__veil" aria-hidden="true" />
+            <div className="auth-stage__orb auth-stage__orb--one" aria-hidden="true" />
+            <div className="auth-stage__orb auth-stage__orb--two" aria-hidden="true" />
+
             <div className="auth-stage__content">
               <div>
                 <Link to="/" className="brand-wordmark auth-stage__brand">Rent a Fit</Link>
                 <p className="eyebrow auth-stage__kicker mb-2">Welcome back</p>
-                <h1 className="section-title auth-stage__title mb-3">Sign in to continue renting, ordering, or managing listings.</h1>
-                <p className="auth-stage__copy mb-0">One account lets you move cleanly between the storefront and the lender workspace.</p>
+                <h1 className="section-title auth-stage__title mb-3">Return to your wardrobe in one login.</h1>
+                <p className="auth-stage__copy mb-0">One account keeps your bag, orders, and listings together.</p>
               </div>
 
               <div className="auth-stage__notes">
@@ -53,18 +57,6 @@ function LoginPage() {
                   {highlights.map((item) => (
                     <div className="auth-stage__highlight" key={item}>{item}</div>
                   ))}
-                </div>
-
-                <div className="auth-stage__credential-card">
-                  <p className="eyebrow mb-2">Demo accounts</p>
-                  <div className="auth-stage__credential-row">
-                    <span>Renter</span>
-                    <strong>renter@rentafit.demo / demo123</strong>
-                  </div>
-                  <div className="auth-stage__credential-row">
-                    <span>Lender</span>
-                    <strong>lender@rentafit.demo / demo123</strong>
-                  </div>
                 </div>
               </div>
             </div>
@@ -74,20 +66,20 @@ function LoginPage() {
             <div className="auth-stage__panel-head">
               <p className="eyebrow mb-2">Account access</p>
               <h2 className="section-title mb-2">Login</h2>
-              <p className="text-muted mb-0">Use an existing account or the demo credentials on the left.</p>
+              <p className="text-muted mb-0">Use your email and password to continue.</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="d-grid gap-3 mt-4">
-              <div>
+            <form onSubmit={handleSubmit} className="d-grid gap-3 mt-4 auth-stage__form">
+              <div className="lux-form-field">
                 <label className="form-label">Email</label>
-                <input type="email" name="email" className="form-control form-control-lg" placeholder="name@example.com" value={formData.email} onChange={handleChange} required />
+                <input type="email" name="email" className="form-control form-control-lg lux-input" placeholder="name@example.com" value={formData.email} onChange={handleChange} required />
               </div>
-              <div>
+              <div className="lux-form-field">
                 <label className="form-label">Password</label>
-                <input type="password" name="password" className="form-control form-control-lg" placeholder="Enter password" value={formData.password} onChange={handleChange} required />
+                <input type="password" name="password" className="form-control form-control-lg lux-input" placeholder="Enter password" value={formData.password} onChange={handleChange} required />
               </div>
-              {error && <div className="alert alert-danger rounded-4 py-2 mb-0">{error}</div>}
-              <button type="submit" className="btn btn-primary btn-lg rounded-pill mt-2">Login</button>
+              {error && <div className="auth-stage__error" role="alert">{error}</div>}
+              <button type="submit" className="btn btn-primary btn-lg auth-stage__submit mt-2">Login</button>
             </form>
 
             <div className="auth-stage__panel-footer mt-4">

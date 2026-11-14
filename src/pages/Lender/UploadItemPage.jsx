@@ -84,7 +84,7 @@ function UploadItemPage() {
       event.stopPropagation();
       setValidated(true);
       if (missingImages.length > 0) {
-        setApiError('Upload both required garment photos: one clean front view and one close-up detail shot.');
+        setApiError('Upload both required photos before continuing.');
       }
       return;
     }
@@ -173,7 +173,7 @@ function UploadItemPage() {
           <div>
             <p className="eyebrow mb-2">Lender flow</p>
             <h1 className="section-title mb-2">Upload a product</h1>
-            <p className="text-muted mb-0">This flow now expects exactly two garment photos: one clean front view and one close-up detail shot, followed by the listing metadata and ML guidance.</p>
+            <p className="text-muted mb-0">Add two photos and the key details for your listing.</p>
           </div>
           <div className="workspace-header__actions">
             <button type="button" className="btn btn-outline-primary rounded-pill px-4" onClick={() => navigate('/lender/dashboard')}>
@@ -191,7 +191,7 @@ function UploadItemPage() {
                 <div className="workspace-card__header">
                   <div>
                     <p className="eyebrow mb-1">Image set</p>
-                    <h2 className="h4 mb-0">Upload the two required garment photos</h2>
+                    <h2 className="h4 mb-0">Upload two photos</h2>
                   </div>
                 </div>
 
@@ -287,7 +287,7 @@ function UploadItemPage() {
                   </div>
                   <div className="col-md-6">
                     <label className="form-label">Description</label>
-                    <textarea className="form-control form-control-lg" rows="4" name="description" value={formData.description} onChange={handleChange} placeholder="Describe the outfit, styling use case, and important details." required />
+                    <textarea className="form-control form-control-lg" rows="4" name="description" value={formData.description} onChange={handleChange} placeholder="Describe the piece, fit, and standout details." required />
                   </div>
                 </div>
               </section>
@@ -295,7 +295,7 @@ function UploadItemPage() {
               <section className="workspace-section">
                 <div className="d-flex flex-wrap gap-3">
                   <button type="submit" className="btn btn-primary btn-lg rounded-pill px-4" disabled={isSubmitting}>
-                    {isSubmitting ? 'Processing...' : 'Get pricing and review result'}
+                    {isSubmitting ? 'Processing...' : 'See price and review'}
                   </button>
                   <button type="button" className="btn btn-outline-primary btn-lg rounded-pill px-4" onClick={() => navigate('/lender/dashboard')}>
                     Back to dashboard
@@ -306,12 +306,12 @@ function UploadItemPage() {
 
             <aside className="workspace-card upload-workspace__aside">
               <p className="eyebrow mb-2">Submission notes</p>
-              <h2 className="h4 mb-3">What the models will use</h2>
+              <h2 className="h4 mb-3">Listing checklist</h2>
               <ul className="rules-list mb-4">
-                <li>Upload exactly two photos: one clean front view and one close-up detail image.</li>
-                <li>Model A uses brand, category, material, size, condition, age, and original price.</li>
-                <li>Model B adds gender, desired rental price, and listing lifecycle context.</li>
-                <li>The close-up image helps communicate texture, finish, embroidery, buttons, and quality cues.</li>
+                <li>Add one front view and one detail shot.</li>
+                <li>Include brand, category, size, material, and condition.</li>
+                <li>Set the price you want to list at.</li>
+                <li>Use the description to call out fit, fabric, and standout details.</li>
               </ul>
 
               <div className="draft-summary">
