@@ -11,6 +11,12 @@ Work-in-progress React + Bootstrap frontend for the `Rent a Fit` renter and lend
 - Live site: https://ashmita13dutta.github.io/RentAFit-Frontend/
 - Original team repo: [`anmol-228/RentAFit-Frontend`](https://github.com/anmol-228/RentAFit-Frontend). This is my fork of a two-person team project.
 
+## Screenshots
+
+| Home | Catalog |
+|---|---|
+| ![Home page](docs/screenshots/home.png) | ![Catalog page](docs/screenshots/catalog.png) |
+
 The current app is intentionally **frontend-first** and still under active development:
 - placeholder visuals instead of final product photos
 - live search, cart, auth, and lender flows in the UI
