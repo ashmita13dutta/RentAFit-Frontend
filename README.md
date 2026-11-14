@@ -8,8 +8,8 @@ Work-in-progress React + Bootstrap frontend for the `Rent a Fit` renter and lend
 - Some flows still rely on mock responses, browser storage, and placeholder behavior where the full platform is still under development.
 
 ## Live Demo
-- GitHub repo: `anmol-228/RentAFit-Frontend`
-- GitHub Pages: `https://anmol-228.github.io/RentAFit-Frontend/`
+- Live site: https://ashmita13dutta.github.io/RentAFit-Frontend/
+- Original team repo: [`anmol-228/RentAFit-Frontend`](https://github.com/anmol-228/RentAFit-Frontend). This is my fork of a two-person team project.
 
 The current app is intentionally **frontend-first** and still under active development:
 - placeholder visuals instead of final product photos
